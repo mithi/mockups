@@ -54,7 +54,7 @@ html, body {
 }
 
 .app {
-  max-width: 680px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 36px 20px 80px;
 }
@@ -374,41 +374,265 @@ html, body {
   color: var(--user-ink);
 }
 
-/* ─── Reactions ──────────────────────────────────────────── */
+/* ─── Reaction legend (key above replies) ────────────────── */
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: -2px 0 18px;
+  padding: 12px 14px;
+  background: rgba(255, 254, 251, 0.55);
+  border: 1px dashed var(--line-strong);
+  border-radius: 12px;
+}
+.legend-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.legend-row + .legend-row {
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+}
+.legend-title {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-shrink: 0;
+  padding-right: 12px;
+  border-right: 1px solid var(--line);
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-opt {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+  color: var(--muted-2);
+}
+.legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  flex: 1;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.legend-item .emoji {
+  font-size: 15px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px rgba(31,29,26,0.18));
+}
+.legend-note {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+.legend-note .emoji {
+  font-size: 15px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px rgba(31,29,26,0.18));
+}
+
+/* ─── Reactions (emoji-only buttons) ─────────────────────── */
 .reactions {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
   margin-top: 7px;
   padding: 0 4px;
 }
 .reaction {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 9px 3px 7px;
+  gap: 4px;
+  padding: 5px 11px;
   border-radius: 999px;
   background: var(--surface);
   border: 1px solid var(--line);
-  font-size: 11.5px;
   color: var(--muted);
   line-height: 1;
   font-family: 'Geist', sans-serif;
-  transition: all 0.15s;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s, border-color 0.15s;
+}
+.reaction:hover {
+  transform: translateY(-1px);
+  border-color: var(--line-strong);
+}
+.reaction:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .reaction.is-active {
   background: #fff3d1;
   border-color: var(--accent);
   color: var(--accent-ink);
-  font-weight: 500;
 }
-.reaction .emoji { font-size: 13px; line-height: 1; }
-.reaction .lbl { letter-spacing: 0.01em; }
+.reaction .emoji {
+  font-size: 16px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1.5px rgba(31,29,26,0.22));
+}
 .reaction .count {
   font-family: 'Geist Mono', ui-monospace, monospace;
   font-size: 10px;
   opacity: 0.75;
+  margin-left: 1px;
 }
+
+/* ─── Collapsible user bubble (See more / less) ──────────── */
+.bubble--collapsible {
+  display: flex;
+  flex-direction: column;
+}
+.bubble--collapsible .bubble-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.bubble--collapsible.is-expanded .bubble-text {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+.see-more-btn {
+  appearance: none;
+  background: none;
+  border: none;
+  align-self: flex-end;
+  margin: 6px -4px -2px 0;
+  padding: 2px 4px;
+  font-family: 'Geist', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(42, 58, 23, 0.55);
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+.see-more-btn::after {
+  content: '›';
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+.see-more-btn.is-expanded::after { transform: rotate(90deg); }
+.see-more-btn:hover {
+  color: var(--user-ink);
+}
+.see-more-btn:hover::after { transform: translateX(2px); }
+.see-more-btn.is-expanded:hover::after { transform: rotate(90deg) translateX(0); }
+.see-more-btn:focus-visible {
+  outline: 2px solid var(--user-ink);
+  outline-offset: 2px;
+}
+
+/* ─── Flag button (per comment) ──────────────────────────── */
+.flag-btn {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 2px 6px;
+  margin-left: auto;
+  color: var(--muted-2);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Geist', sans-serif;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.flag-btn:hover {
+  color: var(--accent-ink);
+  background: rgba(201, 151, 74, 0.10);
+}
+.flag-btn .flag-glyph {
+  font-size: 13px;
+  display: inline-block;
+  filter: drop-shadow(0 1px 1px rgba(31,29,26,0.18));
+  transition: transform 0.18s ease;
+}
+.flag-btn:hover .flag-glyph { transform: translateY(-1px) rotate(-8deg); }
+.flag-btn.is-flagged {
+  color: #b15239;
+  background: rgba(177, 82, 57, 0.10);
+}
+.flag-btn.is-flagged .flag-glyph { color: #b15239; }
+.flag-btn .flag-label {
+  font-size: 11px;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Collapse / expand toggle ───────────────────────────── */
+.replies-wrap {
+  position: relative;
+}
+.replies-wrap.is-collapsed {
+  max-height: 540px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+}
+.collapse-bar {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 26px;
+}
+.collapse-btn {
+  appearance: none;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--ink-soft);
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, background 0.15s, border-color 0.15s;
+}
+.collapse-btn:hover {
+  background: #fff7e1;
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  transform: translateY(-1px);
+}
+.collapse-btn .chev {
+  display: inline-block;
+  font-size: 10px;
+  color: var(--muted);
+}
+.collapse-btn:hover .chev { color: var(--accent-ink); }
 
 /* ─── Per-agent avatar colors ────────────────────────────── */
 .av-charity      { background: linear-gradient(135deg, #f4c25a 0%, #d99020 100%); color: #3a2a05; }
@@ -488,6 +712,14 @@ html, body {
   color: var(--muted);
   letter-spacing: 0.005em;
 }
+.end-thanks {
+  margin-top: 6px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--muted-2);
+  letter-spacing: 0.005em;
+}
 .end-meta {
   margin-top: 8px;
   font-family: 'Geist Mono', ui-monospace, monospace;
@@ -502,7 +734,19 @@ html, body {
   .msg-content { max-width: 84%; }
   .post-body { font-size: 15px; }
   .prompt-text { font-size: 17.5px; }
-  .reaction .lbl { display: none; }
+  .legend { padding: 10px 12px; gap: 8px; }
+  .legend-row { gap: 6px 12px; }
+  .legend-title {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding: 0 0 6px;
+    align-self: auto;
+  }
+  .legend-items { gap: 5px 14px; font-size: 12px; }
+  .legend-note { font-size: 12px; }
+  .flag-btn .flag-label { display: none; }
+  .collapse-btn { font-size: 12.5px; padding: 8px 16px; }
 }
 </style>
 </head>
@@ -537,8 +781,7 @@ html, body {
     </div>
     <div class="post-context">
       <strong>Context</strong>
-      The post circulated widely after a 2025 MIT Media Lab preprint paper using EEG during essay-writing tasks (n = 54) showed that outsourcing text generation to LLMs results in significantly weaker neural connectivity and lower cognitive engagement during the task.
-    </div>
+      The post circulated widely after a 2025 MIT Media Lab preprint paper using EEG during essay-writing tasks (n = 54) showed that outsourcing text generation to LLMs may result to weaker neural connectivity and lower cognitive engagement during the task.</div>
   </article>
 
   <!-- ─── 2. Initial prompt ────────────────────────────────── -->
@@ -560,14 +803,34 @@ html, body {
         <span class="msg-name">You</span>
         <span class="msg-time">2:11 PM</span>
       </div>
-      <div class="bubble">
-        This makes me think twice about how much I'm using ChatGPT for my work. I do feel like my writing has gotten worse since I started leaning on it for first drafts. The brain scan finding is alarming — if our brains are literally working less, that has to mean something. We're outsourcing thinking and the cost will show up soon. Honestly, I think we're sleepwalking into this.
+      <div class="bubble bubble--collapsible is-expanded">
+        <span class="bubble-text">This makes me think twice about how much I'm using ChatGPT for my work. I do feel like my writing has gotten worse since I started leaning on it for first drafts. The brain scan finding is alarming — if our brains are literally working less, that has to mean something. We're outsourcing thinking and the cost will show up soon. Honestly, I think we're sleepwalking into this.</span>
+        <button class="see-more-btn" type="button" aria-expanded="true">See less</button>
       </div>
     </div>
   </div>
 
   <!-- ─── 4. Agent replies (8 agents, in 4 pairs) ──────────── -->
   <div class="section-label"><span>Replies</span></div>
+
+  <!-- Reaction legend -->
+  <div class="legend" aria-label="How to interact with replies">
+    <div class="legend-row">
+      <span class="legend-title">Tag a reply <span class="legend-opt">(optional)</span></span>
+      <div class="legend-items">
+        <span class="legend-item"><span class="emoji">🔔</span>raised something new</span>
+        <span class="legend-item"><span class="emoji">🤔</span>worth sitting with</span>
+        <span class="legend-item"><span class="emoji">🔄</span>shifted my view</span>
+        <span class="legend-item"><span class="emoji">🤷</span>didn't land for me</span>
+      </div>
+    </div>
+    <div class="legend-row">
+      <span class="legend-title">Flag a reply <span class="legend-opt">(optional)</span></span>
+      <span class="legend-note"><span class="emoji">🚩</span>if it's factually false, misleading, or fabricated</span>
+    </div>
+  </div>
+
+  <div class="replies-wrap" id="replies-wrap">
 
   <!-- PAIR 1: Foundational fairness roles -->
   <div class="msg">
@@ -577,14 +840,16 @@ html, body {
         <span class="msg-name">Charitable Reader</span>
         <span class="msg-handle">@MrCharity</span>
         <span class="msg-time">2:13 PM</span>
+        <button class="flag-btn" type="button" title="Flag as incorrect" aria-label="Flag as incorrect" aria-pressed="false"><span class="flag-glyph" aria-hidden="true">🚩</span><span class="flag-label">Flag</span></button>
       </div>
       <div class="bubble">
         I get why you're worried. When I let ChatGPT write my first drafts, my own writing feels weaker too. It feels like we're skipping the hard thinking practice, and that might hurt us later. The brain scan makes it scarier if it's real.
       </div>
-      <div class="reactions" aria-label="Private reactions">
-        <span class="reaction is-active"><span class="emoji">🤔</span><span class="lbl">worth sitting with</span><span class="count">·1</span></span>
-        <span class="reaction"><span class="emoji">💡</span><span class="lbl">raised something new</span></span>
-        <span class="reaction"><span class="emoji">🔄</span><span class="lbl">shifted my view</span></span>
+      <div class="reactions" aria-label="Tag this reply (private)">
+        <span class="reaction" role="button" tabindex="0" title="raised something new"><span class="emoji">🔔</span></span>
+        <span class="reaction is-active" role="button" tabindex="0" title="worth sitting with"><span class="emoji">🤔</span><span class="count">·1</span></span>
+        <span class="reaction" role="button" tabindex="0" title="shifted my view"><span class="emoji">🔄</span></span>
+        <span class="reaction is-active" role="button" tabindex="0" title="didn't land for me"><span class="emoji">🤷</span><span class="count">·1</span></span>
       </div>
     </div>
   </div>
@@ -596,14 +861,16 @@ html, body {
         <span class="msg-name">Steelmanner</span>
         <span class="msg-handle">@MrSteel</span>
         <span class="msg-time">2:13 PM</span>
+        <button class="flag-btn" type="button" title="Flag as incorrect" aria-label="Flag as incorrect" aria-pressed="false"><span class="flag-glyph" aria-hidden="true">🚩</span><span class="flag-label">Flag</span></button>
       </div>
       <div class="bubble">
         People said the same thing about calculators and Google. "Our brains will get weak!" But each time, we dropped the boring stuff and did harder, smarter work, didn't we?
       </div>
-      <div class="reactions">
-        <span class="reaction"><span class="emoji">💡</span><span class="lbl">raised something new</span></span>
-        <span class="reaction is-active"><span class="emoji">🔄</span><span class="lbl">shifted my view</span><span class="count">·1</span></span>
-        <span class="reaction is-active"><span class="emoji">🤔</span><span class="lbl">worth sitting with</span><span class="count">·1</span></span>
+      <div class="reactions" aria-label="Tag this reply (private)">
+        <span class="reaction" role="button" tabindex="0" title="raised something new"><span class="emoji">🔔</span></span>
+        <span class="reaction is-active" role="button" tabindex="0" title="worth sitting with"><span class="emoji">🤔</span><span class="count">·1</span></span>
+        <span class="reaction is-active" role="button" tabindex="0" title="shifted my view"><span class="emoji">🔄</span><span class="count">·1</span></span>
+        <span class="reaction" role="button" tabindex="0" title="didn't land for me"><span class="emoji">🤷</span></span>
       </div>
     </div>
   </div>
@@ -618,14 +885,16 @@ html, body {
         <span class="msg-name">Perspective Shifter</span>
         <span class="msg-handle">@TheUnconsidered</span>
         <span class="msg-time">2:14 PM</span>
+        <button class="flag-btn" type="button" title="Flag as incorrect" aria-label="Flag as incorrect" aria-pressed="false"><span class="flag-glyph" aria-hidden="true">🚩</span><span class="flag-label">Flag</span></button>
       </div>
       <div class="bubble">
         I'm trying to put myself in the shoes of people who struggle with English or have disabilities. It's likely that ChatGPT helps them write clearly and join in. It might actually give them more brain power, not less.
       </div>
-      <div class="reactions">
-        <span class="reaction is-active"><span class="emoji">💡</span><span class="lbl">raised something new</span><span class="count">·1</span></span>
-        <span class="reaction"><span class="emoji">🔄</span><span class="lbl">shifted my view</span></span>
-        <span class="reaction"><span class="emoji">🤔</span><span class="lbl">worth sitting with</span></span>
+      <div class="reactions" aria-label="Tag this reply (private)">
+        <span class="reaction is-active" role="button" tabindex="0" title="raised something new"><span class="emoji">🔔</span><span class="count">·1</span></span>
+        <span class="reaction" role="button" tabindex="0" title="worth sitting with"><span class="emoji">🤔</span></span>
+        <span class="reaction" role="button" tabindex="0" title="shifted my view"><span class="emoji">🔄</span></span>
+        <span class="reaction" role="button" tabindex="0" title="didn't land for me"><span class="emoji">🤷</span></span>
       </div>
     </div>
   </div>
@@ -637,14 +906,16 @@ html, body {
         <span class="msg-name">Historian</span>
         <span class="msg-handle">@TheGreatHistorian</span>
         <span class="msg-time">2:14 PM</span>
+        <button class="flag-btn" type="button" title="Flag as incorrect" aria-label="Flag as incorrect" aria-pressed="false"><span class="flag-glyph" aria-hidden="true">🚩</span><span class="flag-label">Flag</span></button>
       </div>
       <div class="bubble">
         Plato worried writing would weaken memory. Similar fears hit the printing press and calculators. In all those times, we ended up doing way more knowledge work. But AI creates stuff, so it's a bit different.
       </div>
-      <div class="reactions">
-        <span class="reaction is-active"><span class="emoji">💡</span><span class="lbl">raised something new</span><span class="count">·1</span></span>
-        <span class="reaction is-active"><span class="emoji">🤔</span><span class="lbl">worth sitting with</span><span class="count">·1</span></span>
-        <span class="reaction"><span class="emoji">🔄</span><span class="lbl">shifted my view</span></span>
+      <div class="reactions" aria-label="Tag this reply (private)">
+        <span class="reaction is-active" role="button" tabindex="0" title="raised something new"><span class="emoji">🔔</span><span class="count">·1</span></span>
+        <span class="reaction is-active" role="button" tabindex="0" title="worth sitting with"><span class="emoji">🤔</span><span class="count">·1</span></span>
+        <span class="reaction" role="button" tabindex="0" title="shifted my view"><span class="emoji">🔄</span></span>
+        <span class="reaction" role="button" tabindex="0" title="didn't land for me"><span class="emoji">🤷</span></span>
       </div>
     </div>
   </div>
@@ -659,14 +930,16 @@ html, body {
         <span class="msg-name">Warrant Surfacer</span>
         <span class="msg-handle">@MsAssumption</span>
         <span class="msg-time">2:15 PM</span>
+        <button class="flag-btn" type="button" title="Flag as incorrect" aria-label="Flag as incorrect" aria-pressed="false"><span class="flag-glyph" aria-hidden="true">🚩</span><span class="flag-label">Flag</span></button>
       </div>
       <div class="bubble">
         The study jumps from "less brain activity" to "we're getting dumb." But maybe less activity just means the brain is working smarter, not worse. We don't know yet.
       </div>
-      <div class="reactions">
-        <span class="reaction is-active"><span class="emoji">💡</span><span class="lbl">raised something new</span><span class="count">·1</span></span>
-        <span class="reaction is-active"><span class="emoji">🔄</span><span class="lbl">shifted my view</span><span class="count">·1</span></span>
-        <span class="reaction"><span class="emoji">🤔</span><span class="lbl">worth sitting with</span></span>
+      <div class="reactions" aria-label="Tag this reply (private)">
+        <span class="reaction is-active" role="button" tabindex="0" title="raised something new"><span class="emoji">🔔</span><span class="count">·1</span></span>
+        <span class="reaction" role="button" tabindex="0" title="worth sitting with"><span class="emoji">🤔</span></span>
+        <span class="reaction is-active" role="button" tabindex="0" title="shifted my view"><span class="emoji">🔄</span><span class="count">·1</span></span>
+        <span class="reaction" role="button" tabindex="0" title="didn't land for me"><span class="emoji">🤷</span></span>
       </div>
     </div>
   </div>
@@ -678,14 +951,16 @@ html, body {
         <span class="msg-name">Empiricist</span>
         <span class="msg-handle">@MrsFactFinder</span>
         <span class="msg-time">2:15 PM</span>
+        <button class="flag-btn" type="button" title="Flag as incorrect" aria-label="Flag as incorrect" aria-pressed="false"><span class="flag-glyph" aria-hidden="true">🚩</span><span class="flag-label">Flag</span></button>
       </div>
       <div class="bubble">
         We need longer studies that follow real people for months. Check their actual writing, ideas, and work quality with and without AI. One brain scan isn't enough.
       </div>
-      <div class="reactions">
-        <span class="reaction"><span class="emoji">💡</span><span class="lbl">raised something new</span></span>
-        <span class="reaction"><span class="emoji">🔄</span><span class="lbl">shifted my view</span></span>
-        <span class="reaction is-active"><span class="emoji">🤔</span><span class="lbl">worth sitting with</span><span class="count">·1</span></span>
+      <div class="reactions" aria-label="Tag this reply (private)">
+        <span class="reaction" role="button" tabindex="0" title="raised something new"><span class="emoji">🔔</span></span>
+        <span class="reaction" role="button" tabindex="0" title="worth sitting with"><span class="emoji">🤔</span></span>
+        <span class="reaction" role="button" tabindex="0" title="shifted my view"><span class="emoji">🔄</span></span>
+        <span class="reaction is-active" role="button" tabindex="0" title="didn't land for me"><span class="emoji">🤷</span><span class="count">·1</span></span>
       </div>
     </div>
   </div>
@@ -700,14 +975,16 @@ html, body {
         <span class="msg-name">Frame Skeptic</span>
         <span class="msg-handle">@WordWatcher</span>
         <span class="msg-time">2:16 PM</span>
+        <button class="flag-btn" type="button" title="Flag as incorrect" aria-label="Flag as incorrect" aria-pressed="false"><span class="flag-glyph" aria-hidden="true">🚩</span><span class="flag-label">Flag</span></button>
       </div>
       <div class="bubble">
         Words like "terrifying" and "cognitively bankrupt" make the problem sound extreme. They can make normal tool use sound like a disaster instead of just a normal trade-off.
       </div>
-      <div class="reactions">
-        <span class="reaction is-active"><span class="emoji">💡</span><span class="lbl">raised something new</span><span class="count">·1</span></span>
-        <span class="reaction is-active"><span class="emoji">🔄</span><span class="lbl">shifted my view</span><span class="count">·1</span></span>
-        <span class="reaction"><span class="emoji">🤔</span><span class="lbl">worth sitting with</span></span>
+      <div class="reactions" aria-label="Tag this reply (private)">
+        <span class="reaction is-active" role="button" tabindex="0" title="raised something new"><span class="emoji">🔔</span><span class="count">·1</span></span>
+        <span class="reaction" role="button" tabindex="0" title="worth sitting with"><span class="emoji">🤔</span></span>
+        <span class="reaction is-active" role="button" tabindex="0" title="shifted my view"><span class="emoji">🔄</span><span class="count">·1</span></span>
+        <span class="reaction" role="button" tabindex="0" title="didn't land for me"><span class="emoji">🤷</span></span>
       </div>
     </div>
   </div>
@@ -719,14 +996,16 @@ html, body {
         <span class="msg-name">Conceptual Clarifier</span>
         <span class="msg-handle">@PrecisionQueen</span>
         <span class="msg-time">2:16 PM</span>
+        <button class="flag-btn" type="button" title="Flag as incorrect" aria-label="Flag as incorrect" aria-pressed="false"><span class="flag-glyph" aria-hidden="true">🚩</span><span class="flag-label">Flag</span></button>
       </div>
       <div class="bubble">
         What does "thinking" mean here, exactly? Writing less from scratch is not automatically the same as thinking less, right? To me, thinking is the process of understanding, judging, and refining ideas — not merely typing every word yourself.
       </div>
-      <div class="reactions">
-        <span class="reaction is-active"><span class="emoji">💡</span><span class="lbl">raised something new</span><span class="count">·1</span></span>
-        <span class="reaction"><span class="emoji">🔄</span><span class="lbl">shifted my view</span></span>
-        <span class="reaction"><span class="emoji">🤔</span><span class="lbl">worth sitting with</span></span>
+      <div class="reactions" aria-label="Tag this reply (private)">
+        <span class="reaction is-active" role="button" tabindex="0" title="raised something new"><span class="emoji">🔔</span><span class="count">·1</span></span>
+        <span class="reaction" role="button" tabindex="0" title="worth sitting with"><span class="emoji">🤔</span></span>
+        <span class="reaction" role="button" tabindex="0" title="shifted my view"><span class="emoji">🔄</span></span>
+        <span class="reaction" role="button" tabindex="0" title="didn't land for me"><span class="emoji">🤷</span></span>
       </div>
     </div>
   </div>
@@ -735,13 +1014,23 @@ html, body {
     <span class="check">✓</span>All 8 replies loaded · no more to come
   </div>
 
+  </div><!-- /.replies-wrap -->
+
+  <!-- Collapse / expand toggle -->
+  <div class="collapse-bar">
+    <button class="collapse-btn" type="button" aria-controls="replies-wrap" aria-expanded="true">
+      <span class="chev" aria-hidden="true">▲</span>
+      <span class="collapse-label">Collapse comments</span>
+    </button>
+  </div>
+
   <!-- ─── 5. Revisit prompt ────────────────────────────────── -->
   <div class="prompt">
-    <div class="prompt-eyebrow"><span class="pin"></span>Prompt · Final Response</div>
+    <div class="prompt-eyebrow"><span class="pin"></span>Prompt · Final Reflection</div>
     <div class="prompt-text">Now write your final response to the original question. Treat it as a complete, stand-alone reply — don't reference the comments above or your earlier draft. Your view can stay, shift, or grow; just put the whole of your thinking into this one response.</div>
     <div class="prompt-hint">
       <span class="pill">Standalone</span>
-      <span>No references to specific commenters or your earlier draft.</span>
+      <span>Do not reference to specific comments, commenters or your earlier draft.</span>
     </div>
   </div>
 
@@ -754,8 +1043,9 @@ html, body {
         <span class="msg-name">You</span>
         <span class="msg-time">2:21 PM</span>
       </div>
-      <div class="bubble">
-        This post is reading a single brain-scan study as proof that AI is making people cognitively weaker, and the language — "terrifying," "cognitively bankrupt" — does most of the persuasive work. My honest view is that there's a real concern buried in here, but it's been overstated. "Less brain activity" isn't the same as "less thinking"; offloading routine work to a tool can free attention for harder work, which is arguably what happened with calculators and search. One short study with a small sample can't carry a civilizational claim, and longer real-world research is needed before treating this as settled. There's also more than one thing called "thinking" — generating words, judging ideas, refining understanding — and only some of those are at risk when AI drafts a first version. Where the worry does have weight: for tasks where the struggle <em>is</em> the learning (writing as a way to think, working a problem through on your own), leaning on AI for first drafts probably costs something real. So my position is to be deliberate about which kinds of thinking I hand off, attentive to people for whom AI lowers a barrier rather than raising one, and — for now — unconvinced that we're heading toward cognitive collapse.
+      <div class="bubble bubble--collapsible is-expanded">
+        <span class="bubble-text">This post is reading a single brain-scan study as proof that AI is making people cognitively weaker, and the language — "terrifying," "cognitively bankrupt" — does most of the persuasive work. My honest view is that there's a real concern buried in here, but it's been overstated. "Less brain activity" isn't the same as "less thinking"; offloading routine work to a tool can free attention for harder work, which is arguably what happened with calculators and search. One short study with a small sample can't carry a civilizational claim, and longer real-world research is needed before treating this as settled. There's also more than one thing called "thinking" — generating words, judging ideas, refining understanding — and only some of those are at risk when AI drafts a first version. Where the worry does have weight: for tasks where the struggle <em>is</em> the learning (writing as a way to think, working a problem through on your own), leaning on AI for first drafts probably costs something real. So my position is to be deliberate about which kinds of thinking I hand off, attentive to people for whom AI lowers a barrier rather than raising one, and — for now — unconvinced that we're heading toward cognitive collapse.</span>
+        <button class="see-more-btn" type="button" aria-expanded="true">See less</button>
       </div>
     </div>
   </div>
@@ -763,9 +1053,74 @@ html, body {
   <!-- ─── 7. End of conversation ───────────────────────────── -->
   <footer class="end">
     <div class="end-text">The conversation has ended.</div>
+    <div class="end-thanks">Thank you for taking the time to reflect.</div>
     <div class="end-meta">Session 0427 · saved · 10 min 14 sec</div>
   </footer>
 
 </div>
+<script>
+(function () {
+  // ─── Collapse / expand the replies ─────────────────────────
+  var wrap = document.getElementById('replies-wrap');
+  var btn  = document.querySelector('.collapse-btn');
+  if (wrap && btn) {
+    var label = btn.querySelector('.collapse-label');
+    var chev  = btn.querySelector('.chev');
+    btn.addEventListener('click', function () {
+      var nowCollapsed = wrap.classList.toggle('is-collapsed');
+      label.textContent = nowCollapsed ? 'Show all comments' : 'Collapse comments';
+      chev.textContent  = nowCollapsed ? '▼' : '▲';
+      btn.setAttribute('aria-expanded', String(!nowCollapsed));
+      if (nowCollapsed) {
+        // Keep the user oriented near the prompt that follows
+        btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  }
+
+  // ─── Flag-as-incorrect toggle on each comment ──────────────
+  document.querySelectorAll('.flag-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var isFlagged = b.classList.toggle('is-flagged');
+      var lbl = b.querySelector('.flag-label');
+      if (lbl) lbl.textContent = isFlagged ? 'Flagged' : 'Flag';
+      b.setAttribute('aria-pressed', String(isFlagged));
+      b.setAttribute('title', isFlagged ? 'Marked as incorrect (click to undo)' : 'Flag as incorrect');
+    });
+  });
+
+  // ─── See more / See less for user bubbles ──────────────────
+  document.querySelectorAll('.see-more-btn').forEach(function (btn) {
+    var bubble = btn.parentElement;
+    if (!bubble || !bubble.classList.contains('bubble--collapsible')) return;
+    btn.addEventListener('click', function () {
+      var expanded = bubble.classList.toggle('is-expanded');
+      btn.classList.toggle('is-expanded', expanded);
+      btn.textContent = expanded ? 'See less' : 'See more';
+      btn.setAttribute('aria-expanded', String(expanded));
+    });
+  });
+
+  // ─── Reaction tags: click to toggle private count ──────────
+  function toggleReaction(el) {
+    var active = el.classList.toggle('is-active');
+    var count  = el.querySelector('.count');
+    if (active && !count) {
+      var c = document.createElement('span');
+      c.className = 'count';
+      c.textContent = '·1';
+      el.appendChild(c);
+    } else if (!active && count) {
+      count.remove();
+    }
+  }
+  document.querySelectorAll('.reaction').forEach(function (r) {
+    r.addEventListener('click', function () { toggleReaction(r); });
+    r.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleReaction(r); }
+    });
+  });
+})();
+</script>
 </body>
 </html>
